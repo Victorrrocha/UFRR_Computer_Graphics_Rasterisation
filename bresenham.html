@@ -25,7 +25,7 @@
 <body>
     
     <div>
-        <h1>DDA: Analisador Diferencial Digital</h1>
+        <h1>Bresenham: linhas</h1>
         <canvas id="canvas" width="600" height="600"></canvas>
         <script>
             var canvas, ctx, heigth = 600 , width = 600, pixelSize = 10
@@ -53,7 +53,7 @@
                 }
 
                 if(coordinates.length == 2){
-                    dda2(coordinates[0][0], coordinates[0][1], coordinates[1][0], coordinates[1][1])
+                    bresenham(coordinates[0][0], coordinates[0][1], coordinates[1][0], coordinates[1][1])
                 }
             }
 
@@ -62,87 +62,66 @@
             })
             // --------------
 
-            //DDA
-            function dda(x1, y1, x2, y2){
+            // primeiro octante x1 < x2 && y1 > y2 (paricularidade dos canvas)
+            function bresenham(x1, y1, x2, y2){
                 
-                deltaX = Math.abs(x1 - x2)
-                deltaY = Math.abs(y1 - y2)
+                deltaX = x2 - x1
+                deltaY = y2 - y1 // caso particular
+                
+                if( Math.abs( deltaX) > Math.abs(deltaY)){
+                    Y = y1
+                    p = 2*deltaY - deltaX
 
-                //45 - 90 // deltaX < deltaY
-                if(deltaX < deltaY){
-                    incremento = ( (deltaX/deltaY) * 10)
-                    console.log(incremento)
-                    
-                    X = Math.min(x1, x2)
-                    Y = Math.min(y1, y2)
-                    // ao andar no y, ele pode tanto subir quanto descer
-                    // se sobe:
-                    if(y2 > y1){
-
-                        for(Y = Math.max(y1, y2); Y >= Math.min(y1, y2); Y-=10){
-                        
-                        context.fillStyle = "black"
-                        context.fillRect(X, Y, pixelSize, pixelSize)
-
-                        X = Math.round(X + incremento)
-                        X = Math.round(X/10) *10
-                        console.log(X)
-                        
-                        }
-                    }
-                    else{
-                        // se desce:
-                        for(Y = Math.min(y1, y2); Y <= Math.max(y1, y2); Y+=10){
-                            
+                    if(y1<y2){
+                        for(X = x1; X < x2; X+=10){
                             context.fillStyle = "black"
                             context.fillRect(X, Y, pixelSize, pixelSize)
-
-                            X = Math.round(X + incremento)
-                            X = Math.round(X/10) *10
-                            console.log(X)
-                        
+                            if(p>=0){
+                                Y += 10
+                                p = p + 2*(deltaY - deltaX)
+                            }
+                            else{
+                                p = p + 2*deltaY
+                            }
                         }
-                    } 
+                    }else{
+                        for(X = x1; X < x2; X+=10){
+                            context.fillStyle = "black"
+                            context.fillRect(X, -Y, pixelSize, pixelSize)
+                            if(p>=0){
+                                Y -= 10
+                                p = p + 2*(deltaY - deltaX)
+                            }
+                            else{
+                                p = p + 2*deltaY
+                            }
+                        }
+                    }
+                    
+
+                }else{
+                    X = x1
+                    p = 2*deltaX - deltaY
+
+                    for(Y = y1; Y < y2; Y+=10){
+                        context.fillStyle = "black"
+                        context.fillRect(X, Y, pixelSize, pixelSize)
+                        if(p>=0){
+                            X += 10
+                            p = p + 2*(deltaX - deltaY)
+                        }
+                        else{
+                            p = p + 2*deltaX
+                        }
+                    }
+
                 }
-
-            }
-
-            function dda2(x1, y1, x2, y2){
-                dx = x2 - x1
-                dy = y2 - y1
-
-
-                //flag = Math.abs(dx) > Math.abs(dy) ? 0 : 1
-
-                passos = Math.abs(dx) > Math.abs(dy) ? Math.abs(dx) : Math.abs(dy)
                 
-                passos = passos/10
-                
-                console.log("passos: "+ passos)
 
-                Xinc = (dx / passos) // multiplicar por 10?
-                Yinc = (dy / passos)
+                // incluindo demais quadrantes
+                // casos: x1 < x2 
 
-                console.log("X inc: "+ Xinc + " Y  inc: "+ Yinc)
 
-                X = x1
-                Y = y1
-
-                for(i = 0; i < passos; i++){
-                    context.fillStyle = "black"
-                    context.fillRect(Math.round( (X + Xinc)/10)*10, Math.round( (Y + Yinc)/10)*10, pixelSize, pixelSize)
-                    
-                    //console.log("X + INC: " + Math.round( (X + Xinc)/10)*10 )
-
-                    X = X + Xinc
-
-                    //console.log("X:" + X )
-
-                    Y = Y + Yinc
-                    
-                    //console.log("Y "+ Y )
-                    
-                }
             }
 
             function DrawGrid() {
