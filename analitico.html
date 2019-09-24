@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linhas e círculos</title>
+
+    <style>
+        body{
+            background-color: cornflowerblue
+        }
+        canvas{
+            background-color: white;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            margin: auto;
+        }
+    
+    </style>
+</head>
+<body>
+    
+    <div>
+        <h1>Analitico</h1>
+        <canvas id="canvas" width="600" height="600"></canvas>
+        <script>
+            var canvas, ctx, heigth = 600 , width = 600, pixelSize = 10
+            var x, y, count = 0
+            var coordinates = [[]]
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            
+            //GET MOUSE CLICK 
+            function getCursorPosition(canvas, event){
+                const rect = canvas.getBoundingClientRect()
+                
+                x = Math.floor((event.clientX - rect.left) / pixelSize)
+                y = Math.floor((event.clientY - rect.top) / pixelSize)
+
+                console.log("x: "+ x + " y: "+ y)
+                context.fillStyle = "black"
+                context.fillRect(x*10, y*10, pixelSize, pixelSize)
+                
+                if(coordinates.length <= 2){
+                    coordinates[count] = [x,y]
+                    count++
+                    if(count > 1 )
+                        count = 0
+                }
+
+                if(coordinates.length == 2){
+                    analitico(coordinates[0][0], coordinates[0][1], coordinates[1][0], coordinates[1][1])
+                }
+            }
+
+            canvas.addEventListener('mousedown', function(e){
+                getCursorPosition(canvas, e)
+            })
+            // --------------
+
+            //ANALITICO
+            function analitico(x1, y1, x2, y2){
+                
+                x1 = x1*10
+                y1 = y1*10
+                x2 = x2*10
+                y2 = y2*10
+
+                if(x1 != x2){
+                    m = (y2 - y1)/(x2 - x1)
+                    b = (y2 - m*x2)
+                    // saber a direção!
+                    if(x1 < x2){
+                        for(var X = x1; X <= x2; X+=10){
+                        Y = m*X + b
+                        //console.log("X: "+ Math.round( (Math.ceil(X) *10 )/10 + Math.ceil(X)%10 ) + " Y: "+ Math.round( (Math.ceil(Y) *10 )/10 + Math.ceil(Y)%10 ) )
+                        console.log("X: "+ X+" Y: "+Y)
+                        context.fillStyle = "black"
+                        context.fillRect(Math.floor(X/10)*10, Math.floor(Y/10)*10, pixelSize, pixelSize)
+                        }
+                    }
+                    else{
+                        for(var X = x2; X <= x1; X+=10){
+                        Y = m*X + b
+                        //console.log("X: "+ Math.round( (Math.ceil(X) *10 )/10 + Math.ceil(X)%10 ) + " Y: "+ Math.round( (Math.ceil(Y) *10 )/10 + Math.ceil(Y)%10 ) )
+                        console.log("X: "+ X+" Y: "+Y)
+                        context.fillStyle = "black"
+                        context.fillRect(Math.floor(X/10)*10, Math.floor(Y/10)*10, pixelSize, pixelSize)
+                    }
+                    }
+                } else{
+                    for(var Y = y1; Y <= y2; Y+=10){
+                        X = x1
+                        console.log("X: "+ X + " Y: "+Y)
+                        context.fillStyle = "black"
+                        context.fillRect(X, Y, pixelSize, pixelSize)
+                    }
+                }
+            }
+
+            function DrawGrid() {
+    
+                for(var x = 0; x <= width; x += 10){
+                    context.moveTo(x, 0)
+                    context.lineTo(x, heigth)
+                }
+    
+                for(var x = 0; x <= heigth; x += 10){
+                    context.moveTo(0, x)
+                    context.lineTo(width, x)
+                }
+    
+                context.strokeStyle = "black"
+                context.stroke()
+            }
+    
+            DrawGrid()
+    
+        </script>
+    </div>
+    
+</body>
+</html>
