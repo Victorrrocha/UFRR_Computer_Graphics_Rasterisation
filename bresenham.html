@@ -70,50 +70,84 @@
                 
                 if( Math.abs( deltaX) > Math.abs(deltaY)){
                     Y = y1
-                    p = 2*deltaY - deltaX
+                    p = 2*deltaY - deltaX 
+                    console.log("p: "+p)
+                    if(x1 < x2 ){
 
-                    if(y1<y2){
-                        for(X = x1; X < x2; X+=10){
-                            context.fillStyle = "black"
-                            context.fillRect(X, Y, pixelSize, pixelSize)
-                            if(p>=0){
-                                Y += 10
-                                p = p + 2*(deltaY - deltaX)
-                            }
-                            else{
-                                p = p + 2*deltaY
-                            }
-                        }
-                    }else{
-                        for(X = x1; X < x2; X+=10){
-                            context.fillStyle = "black"
-                            context.fillRect(X, -Y, pixelSize, pixelSize)
-                            if(p>=0){
-                                Y -= 10
-                                p = p + 2*(deltaY - deltaX)
-                            }
-                            else{
-                                p = p + 2*deltaY
+                        if(y1 <= y2){
+
+                            for(X = x1; X < x2; X+=10){
+                                context.fillStyle = "black"
+                                context.fillRect(X, Y, pixelSize, pixelSize)
+                                if(p>=0){
+                                    Y += 10
+                                    p = p + 2*(deltaY - deltaX)
+                                    console.log("p: "+p)
+                                }
+                                else{
+                                    p = p + 2*deltaY
+                                    console.log("p: "+p)
+                                }
                             }
                         }
-                    }
+                        else{ //y1 > y2
+                            for(X = x1; X < x2; X +=10){
+                                context.fillStyle = "black"
+                                context.fillRect(X, Y, pixelSize, pixelSize)
+                                if(p>=0){
+                                    Y -= 10
+                                    p = p + 2*(Math.abs(deltaY) - deltaX)
+                                    console.log("p: "+p)
+                                }
+                                else{
+                                    p = p + 2*Math.abs(deltaY)
+                                    console.log("p: "+p)
+                                }
+                            }
+                        }
+                    }  
+                        
                     
 
                 }else{
                     X = x1
-                    p = 2*deltaX - deltaY
+                    p = 2*Math.abs(deltaX) - Math.abs(deltaY)
 
-                    for(Y = y1; Y < y2; Y+=10){
-                        context.fillStyle = "black"
-                        context.fillRect(X, Y, pixelSize, pixelSize)
-                        if(p>=0){
-                            X += 10
-                            p = p + 2*(deltaX - deltaY)
+                    //x1<= x2
+                    if(x1 <= x2){
+
+                        if(y1 < y2){
+                            console.log("x1 < x2 e y1 < y2")
+                            for(Y = y1; Y < y2; Y+=10){
+                                context.fillStyle = "black"
+                                context.fillRect(X, Y, pixelSize, pixelSize)
+                                if(p>=0){
+                                    X += 10
+                                    p = p + 2*(Math.abs(deltaX) - Math.abs(deltaY))
+                                }
+                                else{
+                                    p = p + 2*Math.abs(deltaX)
+                                }
+                            }
                         }
                         else{
-                            p = p + 2*deltaX
+                            console.log("x1 < x2 e y1 > y2")
+                            for(Y = y1; Y >= y2; Y-=10){
+                                context.fillStyle = "black"
+                                context.fillRect(X, Y, pixelSize, pixelSize)
+                                if(p>=0){
+                                    X += 10
+                                    p = p + 2*(Math.abs(deltaX) - Math.abs(deltaY))
+                                }
+                                else{
+                                    p = p + 2*Math.abs(deltaX)
+                                }
+                            }
                         }
                     }
+                    
+                    
+                    
 
                 }
                 

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linhas e círculos</title>
+    <!-- Código de https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/ visitado 30/09/2019 -->
+    <style>
+        body{
+            background-color: cornflowerblue
+        }
+        canvas{
+            background-color: white;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            margin: auto;
+        }
+    
+    </style>
+</head>
+<body>
+    
+    <div>
+        <h1>Bresenham: círculo</h1>
+        <canvas id="canvas" width="600" height="600"></canvas>
+        <script>
+            var canvas, ctx, heigth = 600 , width = 600, pixelSize = 10
+            var x, y, count = 0
+            var coordinates = [[]]
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            
+            //GET MOUSE CLICK 
+            function getCursorPosition(canvas, event){
+                const rect = canvas.getBoundingClientRect()
+                
+                x = Math.floor((event.clientX - rect.left) / pixelSize)*10
+                y = Math.floor((event.clientY - rect.top) / pixelSize)*10
+
+                console.log("x: "+ x + " y: "+ y)
+                context.fillStyle = "black"
+                context.fillRect(x, y, pixelSize, pixelSize)
+            
+
+               
+                bresenham_circle(x, y)
+                
+            }
+
+            canvas.addEventListener('mousedown', function(e){
+                getCursorPosition(canvas, e)
+            })
+            // --------------
+
+            function paint(X, Y){
+
+                context.fillStyle = "black"
+                context.fillRect(X, Y, pixelSize, pixelSize)
+    
+            }
+
+            function drawCircle(xc, yc, x, y){
+                paint(xc+x, yc+y)
+                paint(xc-x, yc+y)
+                paint(xc+x, yc-y)
+                paint(xc-x, yc-y)
+                paint(xc+y, yc+x)
+                paint(xc-y, yc+x)
+                paint(xc+y, yc-x)
+                paint(xc-y, yc-x)
+            }
+
+            // primeiro octante x1 < x2 && y1 > y2 (paricularidade dos canvas)
+            function bresenham_circle(xc, yc){
+                r = 100
+                console.log("centro!")
+                x = 0
+                y = r
+                p = 3 - 2* r
+
+                drawCircle(xc, yc, x, y)
+
+                while( y >= x) {
+                    x+=10
+                    if(p > 0 ){
+                        y-=10
+                        p = p + 4*(x - y) + 10
+                    }
+                    else{
+                        p = p + 4*x + 6
+                    }
+                    drawCircle(xc, yc, x, y)
+                } 
+            }
+
+            function DrawGrid() {
+    
+                for(var x = 0; x <= width; x += 10){
+                    context.moveTo(x, 0)
+                    context.lineTo(x, heigth)
+                }
+    
+                for(var x = 0; x <= heigth; x += 10){
+                    context.moveTo(0, x)
+                    context.lineTo(width, x)
+                }
+    
+                context.strokeStyle = "black"
+                context.stroke()
+            }
+    
+            DrawGrid()
+    
+        </script>
+    </div>
+    
+</body>
+</html>

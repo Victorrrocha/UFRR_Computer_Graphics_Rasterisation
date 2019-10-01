@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linhas e círculos</title>
+
+    <style>
+        body{
+            background-color: cornflowerblue
+        }
+        canvas{
+            background-color: white;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            margin: auto;
+        }
+    
+    </style>
+</head>
+<body>
+    
+    <div>
+        <h1>Flood Fill: Retângulo</h1>
+        <canvas id="canvas" width="600" height="600"></canvas>
+        <script>
+            var canvas, ctx, heigth = 600 , width = 600, pixelSize = 10
+            var x, y
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            var contador = 0
+            //GET MOUSE CLICK 
+            function getCursorPosition(canvas, event){
+                const rect = canvas.getBoundingClientRect()
+                
+                x = Math.floor((event.clientX - rect.left) / pixelSize)*10
+                y = Math.floor((event.clientY - rect.top) / pixelSize)*10
+
+                //context.fillStyle = "black"
+                //context.fillRect(x, y, pixelSize, pixelSize)
+
+                
+                //console.log(contador)
+            }
+
+            canvas.addEventListener('mousedown', function(e){
+                getCursorPosition(canvas, e)
+            })
+            // --------------
+            function paint(X, Y){
+                context.fillStyle = "red"
+                context.fillRect(X, Y, pixelSize, pixelSize)
+            }
+
+            function geoRectFill(x1, y1, x2, y2){
+                for(y = Math.min(y1, y2)+10; y < Math.max(y1, y2); y+=10){
+                    for(x = Math.min(x1, x2)+10; x < Math.max(x1, x2); x+=10){
+                        paint(x, y)
+                    }
+                }
+            }
+            
+            function DrawRect(){
+                x1 = 100
+                y1 = 200
+                x2 = 500
+                y2 = 400
+
+                for(x = x1; x <= x2; x+=10){
+                    y = y1
+                    context.fillStyle = "black"
+                    context.fillRect(x, y, pixelSize, pixelSize)
+                    y = y2
+                    context.fillStyle = "black"
+                    context.fillRect(x, y, pixelSize, pixelSize)
+                }
+                for(y = y1; y <= y2; y+=10){
+                    x = x1
+                    context.fillStyle = "black"
+                    context.fillRect(x, y, pixelSize, pixelSize)
+                    x = x2
+                    context.fillStyle = "black"
+                    context.fillRect(x, y, pixelSize, pixelSize)
+                }
+                geoRectFill(x1, y1,x2,y2)
+            }
+
+            //DrawGrid()
+            DrawRect()
+
+        </script>
+    </div>
+    
+</body>
+</html>

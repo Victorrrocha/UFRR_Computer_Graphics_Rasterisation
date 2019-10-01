@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linhas e círculos</title>
+
+    <style>
+        body{
+            background-color: cornflowerblue
+        }
+        canvas{
+            background-color: white;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            margin: auto;
+        }
+    
+    </style>
+</head>
+<body>
+    
+    <div>
+        <h1>incremental com simetria</h1>
+        <canvas id="canvas" width="600" height="600"></canvas>
+        <script>
+            var canvas, ctx, heigth = 600 , width = 600, pixelSize = 10
+            var x, y, count = 0
+            var coordinates = [[]]
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            
+            //GET MOUSE CLICK 
+            function getCursorPosition(canvas, event){
+                const rect = canvas.getBoundingClientRect()
+                
+                x = Math.floor((event.clientX - rect.left) / pixelSize)*10
+                y = Math.floor((event.clientY - rect.top) / pixelSize)*10
+
+                console.log("x: "+ x + " y: "+ y)
+                context.fillStyle = "black"
+                context.fillRect(x, y, pixelSize, pixelSize)
+                
+                
+                incremental_simetria(x, y)
+                
+            }
+
+            canvas.addEventListener('mousedown', function(e){
+                getCursorPosition(canvas, e)
+            })
+            // --------------
+
+            function incremental_simetria(xc, yc){
+                raio = 100
+                theta = 1/raio
+                x = xc + raio
+                y = yc
+
+                for(y = 0; y != x; y+=10){
+                    context.fillStyle = "black"
+                    context.fillRect(Math.round( (x)/10)*10, Math.round( (y)/10)*10, pixelSize, pixelSize)
+                    console.log("x :"+ Math.round( (x)/10)*10+ " y: "+ Math.round( (y)/10)*10)
+                    x = x*Math.cos(theta) - y*Math.sin(theta)
+
+                    y = y*Math.cos(theta) + x*Math.sin(theta)
+                }
+            }
+
+            function DrawGrid() {
+    
+                for(var x = 0; x <= width; x += 10){
+                    context.moveTo(x, 0)
+                    context.lineTo(x, heigth)
+                }
+    
+                for(var x = 0; x <= heigth; x += 10){
+                    context.moveTo(0, x)
+                    context.lineTo(width, x)
+                }
+    
+                context.strokeStyle = "black"
+                context.stroke()
+            }
+    
+            DrawGrid()
+    
+        </script>
+    </div>
+    
+</body>
+</html>
